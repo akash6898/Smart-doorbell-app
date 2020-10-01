@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
-
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 void main() => runApp(MyApp());
@@ -32,6 +33,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   double sliderValue = 0.0;
   double currentPlayerTime = 0;
   double volumeValue = 100;
+  AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -64,6 +66,14 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
     super.initState();
   }
 
+  play() async {
+    final url = 'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1xtra_mf_p';
+    int result = await audioPlayer.play(url);
+    if (result == 1) {
+      // success
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -72,7 +82,9 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.camera),
-        onPressed: _createCameraImage,
+        onPressed: () async {
+          await play();
+        },
       ),
       body: Center(
         child: ListView(
@@ -82,7 +94,7 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
               height: 360,
               child: new VlcPlayer(
                 aspectRatio: 16 / 9,
-                url: "http://192.168.43.230:5000/video_feed",
+                url: "http://192.168.1.205:5000/video_feed",
                 controller: _videoViewController,
                 // Play with vlc options
                 options: [
@@ -108,26 +120,26 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
     );
   }
 
-  void playOrPauseVideo() {
-    String state = _videoViewController2.playingState.toString();
+  // void playOrPauseVideo() {
+  //   String state = _videoViewController2.playingState.toString();
 
-    if (state == "PlayingState.PLAYING") {
-      _videoViewController2.pause();
-      setState(() {
-        isPlaying = false;
-      });
-    } else {
-      _videoViewController2.play();
-      setState(() {
-        isPlaying = true;
-      });
-    }
-  }
+  //   if (state == "PlayingState.PLAYING") {
+  //     _videoViewController2.pause();
+  //     setState(() {
+  //       isPlaying = false;
+  //     });
+  //   } else {
+  //     _videoViewController2.play();
+  //     setState(() {
+  //       isPlaying = true;
+  //     });
+  //   }
+  // }
 
-  void _createCameraImage() async {
-    Uint8List file = await _videoViewController.takeSnapshot();
-    setState(() {
-      image = file;
-    });
-  }
+  // void _createCameraImage() async {
+  //   Uint8List file = await _videoViewController.takeSnapshot();
+  //   setState(() {
+  //     image = file;
+  //   });
+//  }
 }
