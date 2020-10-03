@@ -24,8 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_vlc_player: ^3.0.7 
-  audioplayers: ^0.16.1 
-  threading: ^0.0.10
+  flutter_exoplayer: ^0.5.5
 
 
   # The following adds the Cupertino Icons font to your application.

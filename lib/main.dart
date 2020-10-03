@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:flutter_exoplayer/audioplayer.dart';
 
 void main() => runApp(MyApp());
 
@@ -33,7 +32,6 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   double sliderValue = 0.0;
   double currentPlayerTime = 0;
   double volumeValue = 100;
-  AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -67,10 +65,15 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
   }
 
   play() async {
-    final url = 'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1xtra_mf_p';
-    int result = await audioPlayer.play(url);
-    if (result == 1) {
-      // success
+    AudioPlayer audioPlayer = AudioPlayer();
+    final Result result = await audioPlayer.play(
+      'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1xtra_mf_p',
+      repeatMode: true,
+      respectAudioFocus: true,
+      playerMode: PlayerMode.FOREGROUND,
+    );
+    if (result == Result.ERROR) {
+      print(Result.ERROR);
     }
   }
 
@@ -90,30 +93,30 @@ class MyAppScaffoldState extends State<MyAppScaffold> {
         child: ListView(
           shrinkWrap: true,
           children: <Widget>[
-            SizedBox(
-              height: 360,
-              child: new VlcPlayer(
-                aspectRatio: 16 / 9,
-                url: "http://192.168.1.205:5000/video_feed",
-                controller: _videoViewController,
-                // Play with vlc options
-                options: [
-                  '--quiet',
-                  '--no-drop-late-frames',
-                  '--no-skip-frames',
-                  '--rtsp-tcp'
-                ],
-                hwAcc: HwAcc
-                    .DISABLED, // or {HwAcc.AUTO, HwAcc.DECODING, HwAcc.FULL}
-                placeholder: Container(
-                  height: 250.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[CircularProgressIndicator()],
-                  ),
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   height: 360,
+            //   child: new VlcPlayer(
+            //     aspectRatio: 16 / 9,
+            //     url: "http://192.168.1.205:5000/video_feed",
+            //     controller: _videoViewController,
+            //     // Play with vlc options
+            //     options: [
+            //       '--quiet',
+            //       '--no-drop-late-frames',
+            //       '--no-skip-frames',
+            //       '--rtsp-tcp'
+            //     ],
+            //     hwAcc: HwAcc
+            //         .DISABLED, // or {HwAcc.AUTO, HwAcc.DECODING, HwAcc.FULL}
+            //     placeholder: Container(
+            //       height: 250.0,
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: <Widget>[CircularProgressIndicator()],
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
